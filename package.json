@@ -1,20 +1,21 @@
 {
   "name": "class-validator",
   "private": true,
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Class-based validation with Typescript / ES6 / ES5 using decorators or validation schemas. Supports both node.js and browser",
   "license": "MIT",
   "readmeFilename": "README.md",
   "author": {
-    "name": "Umed Khudoiberdiev",
-    "email": "pleerock.me@gmail.com"
+    "name": "WPensar S.A.",
+    "email": "contato@wpensar.com.br",
+    "url": "https://www.wpensar.com.br"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/pleerock/class-validator.git"
+    "url": "git+git@github.com:wpensar/class-validator.git"
   },
   "bugs": {
-    "url": "https://github.com/pleerock/class-validator/issues"
+    "url": "https://github.com/wpensar/class-validator/issues"
   },
   "tags": [
     "validator",
