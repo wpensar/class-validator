@@ -4,7 +4,7 @@ import {ValidationArguments} from "./ValidationArguments";
  * Validation types.
  */
 export class ValidationTypes {
-    
+
     /* system */
     static CUSTOM_VALIDATION = "customValidation";
     static NESTED_VALIDATION = "nestedValidation";
@@ -24,6 +24,7 @@ export class ValidationTypes {
     static IS_DATE = "isDate";
     static IS_NUMBER = "isNumber";
     static IS_STRING = "isString";
+    static IS_DATE_STRING = "isDateString";
     static IS_ARRAY = "isArray";
     static IS_INT = "isInt";
     static IS_ENUM = "isEnum";
@@ -130,6 +131,8 @@ export class ValidationTypes {
                 return eachPrefix + "$property deve ser um número inteiro";
             case this.IS_STRING:
                 return eachPrefix + "$property deve ser um texto";
+            case this.IS_DATE_STRING:
+                return eachPrefix + "$property deve ser um texto de data";
             case this.IS_ARRAY:
                 return eachPrefix + "$property deve ser uma lista";
             case this.IS_ENUM:
@@ -250,8 +253,8 @@ export class ValidationTypes {
             case this.ARRAY_UNIQUE:
                 return eachPrefix + "Todos os elementos devem únicos";
         }
-        
+
         return "";
     }
-    
+
 }

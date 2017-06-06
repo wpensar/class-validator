@@ -61,7 +61,7 @@ import {
     ArrayContains,
     ArrayNotContains,
     ArrayUnique,
-    IsArray
+    IsArray, IsDateString
 } from "../../src/decorator/decorators";
 import {Validator} from "../../src/validation/Validator";
 import {ValidatorOptions} from "../../src/validation/ValidatorOptions";
@@ -76,7 +76,7 @@ export function checkValidValues(object: { someProperty: any }, values: any[], d
         object.someProperty = value;
         return validator
             .validate(object, validatorOptions)
-            .then(errors => errors.length.should.be.equal(0));
+            .then(errors => expect(errors.length).be.equal(0));
     });
     Promise.all(promises).then(() => done(), err => done(err));
 }
@@ -87,7 +87,7 @@ export function checkInvalidValues(object: { someProperty: any }, values: any[],
         object.someProperty = value;
         return validator
             .validate(object, validatorOptions)
-            .then(errors => errors.length.should.be.equal(1));
+            .then(errors => expect(errors.length).be.equal(1));
     });
     Promise.all(promises).then(() => done(), err => done(err));
 }
@@ -105,10 +105,10 @@ export function checkReturnedError(object: { someProperty: any },
         return validator
             .validate(object, validatorOptions)
             .then(errors => {
-                errors.length.should.be.equal(1);
-                errors[0].target.should.be.equal(object);
-                errors[0].property.should.be.equal("someProperty");
-                errors[0].constraints.should.be.eql({ [validationType]: message });
+                expect(errors.length).be.equal(1);
+                expect(errors[0].target).be.equal(object);
+                expect(errors[0].property).be.equal("someProperty");
+                expect(errors[0].constraints).be.eql({ [validationType]: message });
                 expect(errors[0].value).to.be.equal(value);
             });
     });
@@ -566,6 +566,48 @@ describe("IsString", function() {
 
 });
 
+describe.only("IsDateString", function() {
+
+    const validValues = ["2017-06-06T17:04:42.081Z", "2017-06-06T17:04:42.081"];
+    const invalidValues = [
+        true,
+        false,
+        1,
+        2,
+        null,
+        undefined,
+        "text"
+    ];
+
+    class MyClass {
+        @IsDateString()
+        someProperty: string;
+    }
+
+    it("should not fail if validator.validate said that its valid", function(done) {
+        checkValidValues(new MyClass(), validValues, done);
+    });
+
+    it("should fail if validator.validate said that its invalid", function(done) {
+        checkInvalidValues(new MyClass(), invalidValues, done);
+    });
+
+    it("should not fail if method in validator said that its valid", function() {
+        validValues.forEach(value => expect(validator.isDateString(value)).be.true);
+    });
+
+    it("should fail if method in validator said that its invalid", function() {
+        invalidValues.forEach(value => expect(validator.isDateString(value as any)).be.false);
+    });
+
+    it("should return error object with proper data", function(done) {
+        const validationType = "isDateString";
+        const message = "someProperty deve ser um texto de data";
+        checkReturnedError(new MyClass(), invalidValues, validationType, message, done);
+    });
+
+});
+
 describe("IsArray", function() {
 
     const validValues = [[], [1, 2, 3], [0, 0, 0], [""], [0], [undefined], [{}], new Array()];
@@ -592,11 +634,11 @@ describe("IsArray", function() {
     });
 
     it("should not fail if method in validator said that its valid", function() {
-        validValues.forEach(value => validator.isArray(value).should.be.true);
+        validValues.forEach(value => expect(validator.isArray(value)).to.be.true);
     });
 
     it("should fail if method in validator said that its invalid", function() {
-        invalidValues.forEach(value => validator.isArray(value as any).should.be.false);
+        invalidValues.forEach(value => expect(validator.isArray(value as any)).to.be.false);
     });
 
     it("should return error object with proper data", function(done) {
@@ -1049,7 +1091,7 @@ describe("IsNumberString", function() {
 // -------------------------------------------------------------------------
 
 describe("Contains", function() {
-    
+
     const constraint = "hello";
     const validValues = ["hello world"];
     const invalidValues = [null, undefined, "bye world"];
@@ -1084,7 +1126,7 @@ describe("Contains", function() {
 });
 
 describe("NotContains", function() {
-    
+
     const constraint = "hello";
     const validValues = ["bye world"];
     const invalidValues = [null, undefined, "hello world"];
@@ -1295,9 +1337,9 @@ describe("IsByteLength", function() {
 });
 
 describe("IsCreditCard", function() {
-    
+
     const validValues = [
-        "375556917985515", 
+        "375556917985515",
         "36050234196908",
         "4716461583322103",
         "4716-2210-5188-5662",
@@ -1336,7 +1378,7 @@ describe("IsCreditCard", function() {
 });
 
 describe("IsCurrency", function() {
-    
+
     const validValues = [
         "-$10,123.45"
         , "$10,123.45"
@@ -2514,7 +2556,7 @@ describe("IsUppercase", function() {
         , "   ."
     ];
     const invalidValues = [
-        null, 
+        null,
         undefined,
         "fooBar",
         "123abc"
@@ -2895,7 +2937,7 @@ describe("ArrayMaxSize", function() {
         const message = "someProperty must contain not more than " + constraint + " elements";
         checkReturnedError(new MyClass(), invalidValues, validationType, message, done);
     });
-    
+
 });
 
 describe("ArrayUnique", function() {
