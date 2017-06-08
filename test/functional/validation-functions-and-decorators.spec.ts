@@ -568,7 +568,7 @@ describe("IsString", function() {
 
 describe.only("IsDateString", function() {
 
-    const validValues = ["2017-06-06T17:04:42.081Z", "2017-06-06T17:04:42.081"];
+    const validValues = ["2017-06-06T17:04:42.081Z", "2017-06-06T17:04:42.081", "2017-06-06T17:04:42", "2017-06-06T17:04:42Z"];
     const invalidValues = [
         true,
         false,
